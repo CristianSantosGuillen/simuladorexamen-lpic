@@ -19,6 +19,7 @@ const preguntas = [
 let preguntasAleatorias = [];
 let preguntaActual = 0;
 let yaComprobada = false;
+let respuestasCorrectas = 0;
 
 // Función para mezclar preguntas aleatoriamente
 function mezclar(array) {
@@ -69,6 +70,11 @@ function comprobarRespuesta() {
     op.disabled = true;
   });
 
+  // Verificar si fue correcta
+  if (parseInt(seleccion.value) === correcta) {
+    respuestasCorrectas++;
+  }
+
   yaComprobada = true;
 }
 
@@ -84,8 +90,7 @@ function siguientePregunta() {
   if (preguntaActual < preguntasAleatorias.length) {
     mostrarPregunta();
   } else {
-    document.getElementById("quiz-form").innerHTML = "<h2>¡Examen finalizado!</h2>";
-    document.getElementById("botones").style.display = "none";
+    mostrarResultado();
   }
 }
 
@@ -93,3 +98,19 @@ window.onload = () => {
   preguntasAleatorias = mezclar([...preguntas]);
   mostrarPregunta();
 };
+
+function mostrarResultado() {
+  const total = preguntasAleatorias.length;
+  const falladas = total - respuestasCorrectas;
+  const porcentaje = Math.round((respuestasCorrectas / total) * 100);
+
+  const resultadoHTML = `
+    <h2>¡Examen finalizado!</h2>
+    <p><strong>Preguntas correctas:</strong> ${respuestasCorrectas}</p>
+    <p><strong>Preguntas incorrectas:</strong> ${falladas}</p>
+    <p><strong>Porcentaje de acierto:</strong> ${porcentaje}%</p>
+  `;
+
+  document.getElementById("quiz-form").innerHTML = resultadoHTML;
+  document.getElementById("botones").style.display = "none";
+}
