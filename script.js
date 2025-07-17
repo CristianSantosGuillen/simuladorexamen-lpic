@@ -162,9 +162,9 @@ function mostrarResultado() {
 
   let resultadoHTML = `
     <h2>¡Examen finalizado!</h2>
-    <p><strong>Preguntas correctas:</strong> ${respuestasCorrectas}</p>
-    <p><strong>Preguntas incorrectas:</strong> ${falladas}</p>
-    <p><strong>Porcentaje de acierto:</strong> ${porcentaje}%</p>
+    <p><strong>✅ Preguntas correctas:</strong> ${respuestasCorrectas}</p>
+    <p><strong>❌ Preguntas incorrectas:</strong> ${falladas}</p>
+    <p><strong>💯 Porcentaje de acierto:</strong> ${porcentaje}%</p>
   `;
 
   if (preguntasFalladas.length > 0) {
