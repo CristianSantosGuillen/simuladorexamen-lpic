@@ -144,10 +144,19 @@ function mostrarResultado() {
 
     preguntasFalladas.forEach((f) => {
       const correctas = Array.isArray(f.respuestaCorrecta)
-        ? f.respuestaCorrecta.map(i => `<span class="respuesta-correcta"><strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}</span>`).join("<br>")
-        : `<span class="respuesta-correcta"><strong>${String.fromCharCode(97 + f.respuestaCorrecta)}.</strong> ${f.opciones[f.respuestaCorrecta]}</span>`;
+  ? f.respuestaCorrecta.map(i => `<span class="respuesta-correcta">✅ <strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}</span>`).join("<br>")
+  : `<span class="respuesta-correcta">✅ <strong>${String.fromCharCode(97 + f.respuestaCorrecta)}.</strong> ${f.opciones[f.respuestaCorrecta]}</span>`;
 
-      const seleccionadas = f.seleccionUsuario.map(i => `<span class="respuesta-usuario"><strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}</span>`).join("<br>");
+const seleccionadas = f.seleccionUsuario.map(i => {
+  const esCorrecta = Array.isArray(f.respuestaCorrecta)
+    ? f.respuestaCorrecta.includes(i)
+    : i === f.respuestaCorrecta;
+
+  const icono = esCorrecta ? "✅" : "❌";
+  const clase = esCorrecta ? "respuesta-correcta" : "respuesta-usuario";
+
+  return `<span class="${clase}">${icono} <strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}</span>`;
+}).join("<br>");
 
       resultadoHTML += `
         <div class="tarjeta-fallada">
