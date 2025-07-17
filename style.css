@@ -20,3 +20,13 @@ h1 {
 .question {
   margin-bottom: 15px;
 }
+
+#quiz-form h2 {
+  color: #2c3e50;
+  margin-top: 20px;
+}
+
+#quiz-form p {
+  font-size: 18px;
+  margin: 8px 0;
+}
