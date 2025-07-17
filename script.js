@@ -113,6 +113,7 @@ function mostrarResultado() {
 
   document.getElementById("quiz-form").innerHTML = resultadoHTML;
   document.getElementById("botones").style.display = "none";
+  document.getElementById("boton-reiniciar").style.display = "block";
 }
 
 function reiniciarExamen() {
