@@ -31,22 +31,28 @@ function mostrarPregunta() {
   form.innerHTML = "";
 
   const p = preguntasAleatorias[preguntaActual];
-  const div = document.createElement("div");
-  div.className = "question";
-
-  div.innerHTML = `<p><strong>Pregunta ${preguntaActual + 1}:</strong> ${p.pregunta}</p>`;
-
   const esMultiple = Array.isArray(p.respuestaCorrecta);
 
-  p.opciones.forEach((opcion, i) => {
-    const letra = String.fromCharCode(97 + i); // a, b, c...
-    div.innerHTML += `
-      <label>
-        <input type="${esMultiple ? "checkbox" : "radio"}" name="opcion" value="${i}" />
-        <strong>${letra}.</strong> ${opcion}
-      </label>
-    `;
-  });
+  const div = document.createElement("div");
+  div.className = "question-card";
+
+  div.innerHTML = `
+    <div class="pregunta-header">
+      <span class="pregunta-numero">Pregunta ${preguntaActual + 1}</span>
+    </div>
+    <p class="pregunta-texto">${p.pregunta}</p>
+    <div class="opciones">
+      ${p.opciones.map((opcion, i) => {
+        const letra = String.fromCharCode(97 + i);
+        return `
+          <label class="opcion-label">
+            <input type="${esMultiple ? "checkbox" : "radio"}" name="opcion" value="${i}" />
+            <strong>${letra}.</strong> ${opcion}
+          </label>
+        `;
+      }).join("")}
+    </div>
+  `;
 
   form.appendChild(div);
 }
