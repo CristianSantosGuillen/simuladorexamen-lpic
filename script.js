@@ -39,13 +39,14 @@ function mostrarPregunta() {
   const esMultiple = Array.isArray(p.respuestaCorrecta);
 
   p.opciones.forEach((opcion, i) => {
-    div.innerHTML += `
-      <label>
-        <input type="${esMultiple ? "checkbox" : "radio"}" name="opcion" value="${i}" />
-        ${opcion}
-      </label>
-    `;
-  });
+  const letra = String.fromCharCode(97 + i); // convierte 0 → 'a', 1 → 'b', etc.
+  div.innerHTML += `
+    <label>
+      <input type="${esMultiple ? "checkbox" : "radio"}" name="opcion" value="${i}" />
+      <strong>${letra}.</strong> ${opcion}
+    </label>
+  `;
+});
 
   form.appendChild(div);
 }
