@@ -84,7 +84,19 @@ function comprobarRespuesta() {
   opciones.forEach((op, i) => {
     const label = op.parentElement;
 
-    if (esMultiple ? p.respuestaCorrecta.includes(i) : i === p.respuestaCorrecta) {
+    // Quitar iconos previos si existen
+    const iconoExistente = label.querySelector(".icono-respuesta");
+    if (iconoExistente) {
+      iconoExistente.remove();
+    }
+
+    // Definir si la opción es correcta
+    const esCorrecta = esMultiple
+      ? p.respuestaCorrecta.includes(i)
+      : i === p.respuestaCorrecta;
+
+    // Cambiar estilos de color y peso
+    if (esCorrecta) {
       label.style.color = "green";
       label.style.fontWeight = "bold";
     } else {
@@ -92,8 +104,18 @@ function comprobarRespuesta() {
       label.style.fontWeight = "normal";
     }
 
-    if (op.checked && !(esMultiple ? p.respuestaCorrecta.includes(i) : i === p.respuestaCorrecta)) {
+    if (op.checked && !esCorrecta) {
       label.style.color = "red";
+    }
+
+    // Si está seleccionada, añadir icono al lado
+    if (op.checked) {
+      const iconoSpan = document.createElement("span");
+      iconoSpan.className = "icono-respuesta";
+      iconoSpan.style.marginLeft = "8px";
+      iconoSpan.style.fontWeight = "bold";
+      iconoSpan.textContent = esCorrecta ? "✅" : "❌";
+      label.appendChild(iconoSpan);
     }
 
     op.disabled = true;
