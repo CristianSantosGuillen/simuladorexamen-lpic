@@ -12,9 +12,19 @@ const preguntas = [
   {
     pregunta: "Which run levels should never be declared as the default run level when using SysV init? (Choose TWO correct answers.)",
     opciones: ["0", "1", "3", "5", "6"],
-    respuestaCorrecta: [0, 4]
+    respuestaCorrecta: [0, 4]  // respuestas correctas: 0 y 4 (niveles 0 y 6)
   }
 ];
+
+let preguntasAleatorias = [];
+let preguntaActual = 0;
+let yaComprobada = false;
+let respuestasCorrectas = 0;
+
+// Mezclar preguntas
+function mezclar(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
 
 function mostrarPregunta() {
   const form = document.getElementById("quiz-form");
@@ -67,7 +77,6 @@ function comprobarRespuesta() {
   opciones.forEach((op, i) => {
     const label = op.parentElement;
 
-    // Resaltar respuestas correctas
     if (esMultiple ? p.respuestaCorrecta.includes(i) : i === p.respuestaCorrecta) {
       label.style.color = "green";
       label.style.fontWeight = "bold";
@@ -76,7 +85,6 @@ function comprobarRespuesta() {
       label.style.fontWeight = "normal";
     }
 
-    // Si está seleccionado pero es incorrecto, marcar en rojo
     if (op.checked && !(esMultiple ? p.respuestaCorrecta.includes(i) : i === p.respuestaCorrecta)) {
       label.style.color = "red";
     }
@@ -84,7 +92,7 @@ function comprobarRespuesta() {
     op.disabled = true;
   });
 
-  // Comprobar si la selección coincide con la correcta
+  // Validar si la respuesta es correcta
   const correcta = esMultiple
     ? (seleccionadas.length === p.respuestaCorrecta.length && seleccionadas.every(val => p.respuestaCorrecta.includes(val)))
     : (seleccionadas[0] === p.respuestaCorrecta);
@@ -93,3 +101,54 @@ function comprobarRespuesta() {
 
   yaComprobada = true;
 }
+
+function siguientePregunta() {
+  if (!yaComprobada) {
+    alert("Debes comprobar la respuesta primero.");
+    return;
+  }
+
+  preguntaActual++;
+  yaComprobada = false;
+
+  if (preguntaActual < preguntasAleatorias.length) {
+    mostrarPregunta();
+  } else {
+    mostrarResultado();
+  }
+}
+
+function mostrarResultado() {
+  const total = preguntasAleatorias.length;
+  const falladas = total - respuestasCorrectas;
+  const porcentaje = Math.round((respuestasCorrectas / total) * 100);
+
+  const resultadoHTML = `
+    <h2>¡Examen finalizado!</h2>
+    <p><strong>Preguntas correctas:</strong> ${respuestasCorrectas}</p>
+    <p><strong>Preguntas incorrectas:</strong> ${falladas}</p>
+    <p><strong>Porcentaje de acierto:</strong> ${porcentaje}%</p>
+  `;
+
+  document.getElementById("quiz-form").innerHTML = resultadoHTML;
+  document.getElementById("botones").style.display = "none";
+  document.getElementById("boton-reiniciar").style.display = "block";
+}
+
+function reiniciarExamen() {
+  preguntaActual = 0;
+  respuestasCorrectas = 0;
+  yaComprobada = false;
+
+  preguntasAleatorias = mezclar([...preguntas]);
+
+  document.getElementById("boton-reiniciar").style.display = "none";
+  document.getElementById("botones").style.display = "block";
+
+  mostrarPregunta();
+}
+
+window.onload = () => {
+  preguntasAleatorias = mezclar([...preguntas]);
+  mostrarPregunta();
+};
