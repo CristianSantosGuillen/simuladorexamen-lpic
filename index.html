@@ -11,13 +11,15 @@
       position: relative;
     }
     #imagen-simulador {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      max-width: 150px;
-      height: auto;
-      z-index: 10;
-    }
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 100px;      /* ancho fijo */
+  height: 100px;     /* alto fijo, para que sea cuadrada */
+  object-fit: cover; /* ajusta la imagen al contenedor recortando lo que sobra */
+  border-radius: 8px; /* opcional, para esquinas redondeadas */
+  z-index: 10;
+}
   </style>
 </head>
 <body>
