@@ -12,7 +12,7 @@ const preguntas = [
   {
     pregunta: "Which run levels should never be declared as the default run level when using SysV init? (Choose TWO correct answers.)",
     opciones: ["0", "1", "3", "5", "6"],
-    respuestaCorrecta: [0, 4]  // Aquí multiples respuestas correctas: niveles 0 y 6
+    respuestaCorrecta: [0, 4]
   }
 ];
 
