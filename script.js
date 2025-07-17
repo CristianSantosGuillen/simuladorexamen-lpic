@@ -114,3 +114,16 @@ function mostrarResultado() {
   document.getElementById("quiz-form").innerHTML = resultadoHTML;
   document.getElementById("botones").style.display = "none";
 }
+
+function reiniciarExamen() {
+  preguntaActual = 0;
+  respuestasCorrectas = 0;
+  yaComprobada = false;
+
+  preguntasAleatorias = mezclar([...preguntas]);
+
+  document.getElementById("boton-reiniciar").style.display = "none";
+  document.getElementById("botones").style.display = "block";
+
+  mostrarPregunta();
+}
