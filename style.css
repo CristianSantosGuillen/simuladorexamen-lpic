@@ -103,3 +103,53 @@ button:hover {
 .respuesta-usuario {
   color: #c0392b;
 }
+
+.question-card {
+  border: 1px solid #ccc;
+  border-left: 6px solid #3498db;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fff;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.pregunta-header {
+  margin-bottom: 10px;
+}
+
+.pregunta-numero {
+  font-weight: bold;
+  font-size: 18px;
+  color: #2980b9;
+  display: block;
+}
+
+.pregunta-texto {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+.opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.opcion-label {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.opcion-label:hover {
+  background-color: #f0f8ff;
+}
+
+.opcion-label input {
+  margin-right: 8px;
+}
