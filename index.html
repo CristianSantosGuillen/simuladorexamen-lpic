@@ -8,14 +8,16 @@
 </head>
 <body>
   <div class="container">
-    <h1>Simulador de Examen Tipo Test</h1>
+    <h1>Simulador de Examen LPIC-01</h1>
     <form id="quiz-form">
-      <!-- Las preguntas se insertarán aquí con JavaScript -->
-    </form>
-    <button type="button" onclick="calcularResultado()">Enviar</button>
+  <!-- Pregunta mostrada dinámicamente -->
+</form>
+<div id="botones" style="margin-top: 15px;">
+  <button type="button" onclick="comprobarRespuesta()">Comprobar respuesta</button>
+  <button type="button" onclick="siguientePregunta()">Siguiente</button>
+</div>
     <div id="resultado"></div>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
