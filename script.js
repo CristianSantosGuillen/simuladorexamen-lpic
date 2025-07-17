@@ -2,29 +2,19 @@ const preguntas = [
   {
     pregunta: "Which SysV init configuration file should be modified to disable the ctrl-alt-delete key combination?",
     opciones: ["/etc/keys", "/proc/keys", "/etc/inittab", "/proc/inittab", "/etc/reboot"],
-    respuestaCorrecta: 1
+    respuestaCorrecta: 2
   },
   {
-    pregunta: "¿Cuánto es 5 + 3?",
-    opciones: ["5", "8", "10", "9"],
-    respuestaCorrecta: 1
+    pregunta: "During a system boot cycle, what program is executed after the BIOS completes its tasks?",
+    opciones: ["The bootloader", "The inetd program", "The init program", "The kernel"],
+    respuestaCorrecta: 0
   },
   {
-    pregunta: "¿Qué lenguaje se usa en la web?",
-    opciones: ["Python", "HTML", "Java", "C++"],
-    respuestaCorrecta: 1
+    pregunta: "Which run levels should never be declared as the default run level when using SysV init? (Choose TWO correct answers.)",
+    opciones: ["0", "1", "3", "5", "6"],
+    respuestaCorrecta: [0, 4]  // Aquí multiples respuestas correctas: niveles 0 y 6
   }
 ];
-
-let preguntasAleatorias = [];
-let preguntaActual = 0;
-let yaComprobada = false;
-let respuestasCorrectas = 0;
-
-// Función para mezclar preguntas aleatoriamente
-function mezclar(array) {
-  return array.sort(() => Math.random() - 0.5);
-}
 
 function mostrarPregunta() {
   const form = document.getElementById("quiz-form");
@@ -36,10 +26,12 @@ function mostrarPregunta() {
 
   div.innerHTML = `<p><strong>Pregunta ${preguntaActual + 1}:</strong> ${p.pregunta}</p>`;
 
+  const esMultiple = Array.isArray(p.respuestaCorrecta);
+
   p.opciones.forEach((opcion, i) => {
     div.innerHTML += `
       <label>
-        <input type="radio" name="opcion" value="${i}" />
+        <input type="${esMultiple ? "checkbox" : "radio"}" name="opcion" value="${i}" />
         ${opcion}
       </label><br/>
     `;
@@ -51,80 +43,53 @@ function mostrarPregunta() {
 function comprobarRespuesta() {
   if (yaComprobada) return;
 
-  const seleccion = document.querySelector('input[name="opcion"]:checked');
-  if (!seleccion) {
-    alert("Selecciona una opción antes de comprobar.");
-    return;
+  const p = preguntasAleatorias[preguntaActual];
+  const esMultiple = Array.isArray(p.respuestaCorrecta);
+
+  let seleccionadas;
+  if (esMultiple) {
+    seleccionadas = Array.from(document.querySelectorAll('input[name="opcion"]:checked')).map(i => parseInt(i.value));
+    if (seleccionadas.length === 0) {
+      alert("Selecciona al menos una opción antes de comprobar.");
+      return;
+    }
+  } else {
+    const seleccion = document.querySelector('input[name="opcion"]:checked');
+    if (!seleccion) {
+      alert("Selecciona una opción antes de comprobar.");
+      return;
+    }
+    seleccionadas = [parseInt(seleccion.value)];
   }
 
-  const correcta = preguntasAleatorias[preguntaActual].respuestaCorrecta;
   const opciones = document.getElementsByName("opcion");
 
   opciones.forEach((op, i) => {
-    if (i === correcta) {
-      op.parentElement.style.color = "green";
-      op.parentElement.style.fontWeight = "bold";
-    } else if (op.checked) {
-      op.parentElement.style.color = "red";
+    const label = op.parentElement;
+
+    // Resaltar respuestas correctas
+    if (esMultiple ? p.respuestaCorrecta.includes(i) : i === p.respuestaCorrecta) {
+      label.style.color = "green";
+      label.style.fontWeight = "bold";
+    } else {
+      label.style.color = "black";
+      label.style.fontWeight = "normal";
     }
+
+    // Si está seleccionado pero es incorrecto, marcar en rojo
+    if (op.checked && !(esMultiple ? p.respuestaCorrecta.includes(i) : i === p.respuestaCorrecta)) {
+      label.style.color = "red";
+    }
+
     op.disabled = true;
   });
 
-  // Verificar si fue correcta
-  if (parseInt(seleccion.value) === correcta) {
-    respuestasCorrectas++;
-  }
+  // Comprobar si la selección coincide con la correcta
+  const correcta = esMultiple
+    ? (seleccionadas.length === p.respuestaCorrecta.length && seleccionadas.every(val => p.respuestaCorrecta.includes(val)))
+    : (seleccionadas[0] === p.respuestaCorrecta);
+
+  if (correcta) respuestasCorrectas++;
 
   yaComprobada = true;
-}
-
-function siguientePregunta() {
-  if (!yaComprobada) {
-    alert("Debes comprobar la respuesta primero.");
-    return;
-  }
-
-  preguntaActual++;
-  yaComprobada = false;
-
-  if (preguntaActual < preguntasAleatorias.length) {
-    mostrarPregunta();
-  } else {
-    mostrarResultado();
-  }
-}
-
-window.onload = () => {
-  preguntasAleatorias = mezclar([...preguntas]);
-  mostrarPregunta();
-};
-
-function mostrarResultado() {
-  const total = preguntasAleatorias.length;
-  const falladas = total - respuestasCorrectas;
-  const porcentaje = Math.round((respuestasCorrectas / total) * 100);
-
-  const resultadoHTML = `
-    <h2>¡Examen finalizado!</h2>
-    <p><strong>Preguntas correctas:</strong> ${respuestasCorrectas}</p>
-    <p><strong>Preguntas incorrectas:</strong> ${falladas}</p>
-    <p><strong>Porcentaje de acierto:</strong> ${porcentaje}%</p>
-  `;
-
-  document.getElementById("quiz-form").innerHTML = resultadoHTML;
-  document.getElementById("botones").style.display = "none";
-  document.getElementById("boton-reiniciar").style.display = "block";
-}
-
-function reiniciarExamen() {
-  preguntaActual = 0;
-  respuestasCorrectas = 0;
-  yaComprobada = false;
-
-  preguntasAleatorias = mezclar([...preguntas]);
-
-  document.getElementById("boton-reiniciar").style.display = "none";
-  document.getElementById("botones").style.display = "block";
-
-  mostrarPregunta();
 }
