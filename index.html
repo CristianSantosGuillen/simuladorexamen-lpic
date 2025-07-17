@@ -5,20 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simulador de Examen LPIC-01</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Añadido para posicionar la imagen arriba a la derecha */
+    .container {
+      position: relative;
+    }
+    #imagen-simulador {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      max-width: 150px;
+      height: auto;
+      z-index: 10;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>Simulador de Examen LPIC-01</h1>
+
+    <!-- Imagen añadida -->
+    <img id="imagen-simulador" src="https://raw.githubusercontent.com/CristianSantosGuillen/simuladorexamen-lpic/b38b87376e3409bc68e81311cdc5dbf3551307b9/maravish.png" alt="Imagen Simulador" />
+
     <form id="quiz-form">
-  <!-- Pregunta mostrada dinámicamente -->
-</form>
-<div id="botones" style="margin-top: 15px;">
-  <button type="button" onclick="comprobarRespuesta()">Comprobar respuesta</button>
-  <button type="button" onclick="siguientePregunta()">Siguiente</button>
-</div>
+      <!-- Pregunta mostrada dinámicamente -->
+    </form>
+    <div id="botones" style="margin-top: 15px;">
+      <button type="button" onclick="comprobarRespuesta()">Comprobar respuesta</button>
+      <button type="button" onclick="siguientePregunta()">Siguiente</button>
+    </div>
     <div id="boton-reiniciar" style="margin-top: 20px; display: none;">
-  <button type="button" onclick="reiniciarExamen()">Reiniciar examen</button>
-</div>
+      <button type="button" onclick="reiniciarExamen()">Reiniciar examen</button>
+    </div>
     <div id="resultado"></div>
   </div>
   <script src="script.js"></script>
