@@ -168,7 +168,7 @@ function mostrarResultado() {
   `;
 
   if (preguntasFalladas.length > 0) {
-    resultadoHTML += `<h3 style="margin-top: 30px;">Resumen de preguntas falladas:</h3>`;
+    resultadoHTML += `<h3 style="margin-top: 30px;">📋 Resumen de preguntas falladas:</h3>`;
 
     preguntasFalladas.forEach((f) => {
       const correctas = Array.isArray(f.respuestaCorrecta)
