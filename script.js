@@ -1,7 +1,7 @@
 const preguntas = [
   {
-    pregunta: "¿Cuál es la capital de Francia?",
-    opciones: ["Madrid", "París", "Roma", "Berlín"],
+    pregunta: "Which SysV init configuration file should be modified to disable the ctrl-alt-delete key combination?",
+    opciones: ["/etc/keys", "/proc/keys", "/etc/inittab", "/proc/inittab", "/etc/reboot"],
     respuestaCorrecta: 1
   },
   {
