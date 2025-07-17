@@ -140,25 +140,23 @@ function mostrarResultado() {
   `;
 
   if (preguntasFalladas.length > 0) {
-    resultadoHTML += `<h3>Preguntas falladas:</h3><ul>`;
+    resultadoHTML += `<h3 style="margin-top: 30px;">Resumen de preguntas falladas:</h3>`;
 
     preguntasFalladas.forEach((f) => {
       const correctas = Array.isArray(f.respuestaCorrecta)
-        ? f.respuestaCorrecta.map(i => `<strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}`).join("<br>")
-        : `<strong>${String.fromCharCode(97 + f.respuestaCorrecta)}.</strong> ${f.opciones[f.respuestaCorrecta]}`;
+        ? f.respuestaCorrecta.map(i => `<span class="respuesta-correcta"><strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}</span>`).join("<br>")
+        : `<span class="respuesta-correcta"><strong>${String.fromCharCode(97 + f.respuestaCorrecta)}.</strong> ${f.opciones[f.respuestaCorrecta]}</span>`;
 
-      const seleccionadas = f.seleccionUsuario.map(i => `<strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}`).join("<br>");
+      const seleccionadas = f.seleccionUsuario.map(i => `<span class="respuesta-usuario"><strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}</span>`).join("<br>");
 
       resultadoHTML += `
-        <li style="margin-bottom: 12px;">
+        <div class="tarjeta-fallada">
           <p><strong>${f.pregunta}</strong></p>
           <p><em>Tu respuesta:</em><br>${seleccionadas}</p>
           <p><em>Respuesta correcta:</em><br>${correctas}</p>
-        </li>
+        </div>
       `;
     });
-
-    resultadoHTML += `</ul>`;
   }
 
   document.getElementById("quiz-form").innerHTML = resultadoHTML;
