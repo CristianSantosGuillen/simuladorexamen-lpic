@@ -1,32 +1,82 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f2f2f2;
-  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #e0f7fa, #ffffff);
+  padding: 40px;
+  color: #2c3e50;
 }
 
 .container {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 600px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 700px;
   margin: auto;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
 }
 
 h1 {
   text-align: center;
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #1a237e;
 }
 
 .question {
-  margin-bottom: 15px;
+  margin-bottom: 25px;
+}
+
+.question p {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+label {
+  display: block;
+  padding: 10px 12px;
+  margin: 6px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+label:hover {
+  background-color: #e0f2f1;
+  border-color: #26a69a;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin-right: 10px;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+button {
+  background-color: #26a69a;
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  margin: 10px 5px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #2bbbad;
 }
 
 #quiz-form h2 {
-  color: #2c3e50;
-  margin-top: 20px;
+  color: #00695c;
+  margin-top: 30px;
 }
 
 #quiz-form p {
   font-size: 18px;
-  margin: 8px 0;
+  margin: 10px 0;
 }
