@@ -16,37 +16,80 @@ const preguntas = [
   }
 ];
 
-function cargarPreguntas() {
-  const formulario = document.getElementById("quiz-form");
-  preguntas.forEach((pregunta, index) => {
-    const divPregunta = document.createElement("div");
-    divPregunta.className = "question";
-    divPregunta.innerHTML = `<p>${index + 1}. ${pregunta.pregunta}</p>`;
+let preguntasAleatorias = [];
+let preguntaActual = 0;
+let yaComprobada = false;
 
-    pregunta.opciones.forEach((opcion, i) => {
-      divPregunta.innerHTML += `
-        <label>
-          <input type="radio" name="pregunta${index}" value="${i}" />
-          ${opcion}
-        </label><br/>
-      `;
-    });
-
-    formulario.appendChild(divPregunta);
-  });
+// Función para mezclar preguntas aleatoriamente
+function mezclar(array) {
+  return array.sort(() => Math.random() - 0.5);
 }
 
-function calcularResultado() {
-  let score = 0;
-  preguntas.forEach((pregunta, index) => {
-    const respuesta = document.querySelector(`input[name="pregunta${index}"]:checked`);
-    if (respuesta && parseInt(respuesta.value) === pregunta.respuestaCorrecta) {
-      score++;
+function mostrarPregunta() {
+  const form = document.getElementById("quiz-form");
+  form.innerHTML = "";
+
+  const p = preguntasAleatorias[preguntaActual];
+  const div = document.createElement("div");
+  div.className = "question";
+
+  div.innerHTML = `<p><strong>Pregunta ${preguntaActual + 1}:</strong> ${p.pregunta}</p>`;
+
+  p.opciones.forEach((opcion, i) => {
+    div.innerHTML += `
+      <label>
+        <input type="radio" name="opcion" value="${i}" />
+        ${opcion}
+      </label><br/>
+    `;
+  });
+
+  form.appendChild(div);
+}
+
+function comprobarRespuesta() {
+  if (yaComprobada) return;
+
+  const seleccion = document.querySelector('input[name="opcion"]:checked');
+  if (!seleccion) {
+    alert("Selecciona una opción antes de comprobar.");
+    return;
+  }
+
+  const correcta = preguntasAleatorias[preguntaActual].respuestaCorrecta;
+  const opciones = document.getElementsByName("opcion");
+
+  opciones.forEach((op, i) => {
+    if (i === correcta) {
+      op.parentElement.style.color = "green";
+      op.parentElement.style.fontWeight = "bold";
+    } else if (op.checked) {
+      op.parentElement.style.color = "red";
     }
+    op.disabled = true;
   });
 
-  const resultado = document.getElementById("resultado");
-  resultado.innerHTML = `<h2>Resultado: ${score} de ${preguntas.length}</h2>`;
+  yaComprobada = true;
 }
 
-window.onload = cargarPreguntas;
+function siguientePregunta() {
+  if (!yaComprobada) {
+    alert("Debes comprobar la respuesta primero.");
+    return;
+  }
+
+  preguntaActual++;
+  yaComprobada = false;
+
+  if (preguntaActual < preguntasAleatorias.length) {
+    mostrarPregunta();
+  } else {
+    document.getElementById("quiz-form").innerHTML = "<h2>¡Examen finalizado!</h2>";
+    document.getElementById("botones").style.display = "none";
+  }
+}
+
+window.onload = () => {
+  preguntasAleatorias = mezclar([...preguntas]);
+  mostrarPregunta();
+};
