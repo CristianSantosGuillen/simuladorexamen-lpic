@@ -12,7 +12,7 @@ const preguntas = [
   {
     pregunta: "Which run levels should never be declared as the default run level when using SysV init? (Choose TWO correct answers.)",
     opciones: ["0", "1", "3", "5", "6"],
-    respuestaCorrecta: [0, 4]  // respuestas correctas: 0 y 4 (niveles 0 y 6)
+    respuestaCorrecta: [0, 4]
   }
 ];
 
@@ -20,8 +20,8 @@ let preguntasAleatorias = [];
 let preguntaActual = 0;
 let yaComprobada = false;
 let respuestasCorrectas = 0;
+let preguntasFalladas = [];
 
-// Mezclar preguntas
 function mezclar(array) {
   return array.sort(() => Math.random() - 0.5);
 }
@@ -39,14 +39,14 @@ function mostrarPregunta() {
   const esMultiple = Array.isArray(p.respuestaCorrecta);
 
   p.opciones.forEach((opcion, i) => {
-  const letra = String.fromCharCode(97 + i); // convierte 0 → 'a', 1 → 'b', etc.
-  div.innerHTML += `
-    <label>
-      <input type="${esMultiple ? "checkbox" : "radio"}" name="opcion" value="${i}" />
-      <strong>${letra}.</strong> ${opcion}
-    </label>
-  `;
-});
+    const letra = String.fromCharCode(97 + i); // a, b, c...
+    div.innerHTML += `
+      <label>
+        <input type="${esMultiple ? "checkbox" : "radio"}" name="opcion" value="${i}" />
+        <strong>${letra}.</strong> ${opcion}
+      </label>
+    `;
+  });
 
   form.appendChild(div);
 }
@@ -93,12 +93,20 @@ function comprobarRespuesta() {
     op.disabled = true;
   });
 
-  // Validar si la respuesta es correcta
   const correcta = esMultiple
     ? (seleccionadas.length === p.respuestaCorrecta.length && seleccionadas.every(val => p.respuestaCorrecta.includes(val)))
     : (seleccionadas[0] === p.respuestaCorrecta);
 
-  if (correcta) respuestasCorrectas++;
+  if (correcta) {
+    respuestasCorrectas++;
+  } else {
+    preguntasFalladas.push({
+      pregunta: p.pregunta,
+      opciones: p.opciones,
+      respuestaCorrecta: p.respuestaCorrecta,
+      seleccionUsuario: seleccionadas
+    });
+  }
 
   yaComprobada = true;
 }
@@ -124,12 +132,34 @@ function mostrarResultado() {
   const falladas = total - respuestasCorrectas;
   const porcentaje = Math.round((respuestasCorrectas / total) * 100);
 
-  const resultadoHTML = `
+  let resultadoHTML = `
     <h2>¡Examen finalizado!</h2>
     <p><strong>Preguntas correctas:</strong> ${respuestasCorrectas}</p>
     <p><strong>Preguntas incorrectas:</strong> ${falladas}</p>
     <p><strong>Porcentaje de acierto:</strong> ${porcentaje}%</p>
   `;
+
+  if (preguntasFalladas.length > 0) {
+    resultadoHTML += `<h3>Preguntas falladas:</h3><ul>`;
+
+    preguntasFalladas.forEach((f) => {
+      const correctas = Array.isArray(f.respuestaCorrecta)
+        ? f.respuestaCorrecta.map(i => `<strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}`).join("<br>")
+        : `<strong>${String.fromCharCode(97 + f.respuestaCorrecta)}.</strong> ${f.opciones[f.respuestaCorrecta]}`;
+
+      const seleccionadas = f.seleccionUsuario.map(i => `<strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}`).join("<br>");
+
+      resultadoHTML += `
+        <li style="margin-bottom: 12px;">
+          <p><strong>${f.pregunta}</strong></p>
+          <p><em>Tu respuesta:</em><br>${seleccionadas}</p>
+          <p><em>Respuesta correcta:</em><br>${correctas}</p>
+        </li>
+      `;
+    });
+
+    resultadoHTML += `</ul>`;
+  }
 
   document.getElementById("quiz-form").innerHTML = resultadoHTML;
   document.getElementById("botones").style.display = "none";
@@ -140,6 +170,7 @@ function reiniciarExamen() {
   preguntaActual = 0;
   respuestasCorrectas = 0;
   yaComprobada = false;
+  preguntasFalladas = [];
 
   preguntasAleatorias = mezclar([...preguntas]);
 
