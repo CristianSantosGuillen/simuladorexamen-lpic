@@ -43,7 +43,7 @@ function mostrarPregunta() {
       <label>
         <input type="${esMultiple ? "checkbox" : "radio"}" name="opcion" value="${i}" />
         ${opcion}
-      </label><br/>
+      </label>
     `;
   });
 
