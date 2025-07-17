@@ -40,7 +40,7 @@ function mostrarPregunta() {
     <div class="pregunta-header">
       <span class="pregunta-numero">Pregunta ${preguntaActual + 1}</span>
     </div>
-    <p class="pregunta-texto">${p.pregunta}</p>
+    <p class="pregunta-texto"><strong>${p.pregunta}</strong></p>
     <div class="opciones">
       ${p.opciones.map((opcion, i) => {
         const letra = String.fromCharCode(97 + i);
