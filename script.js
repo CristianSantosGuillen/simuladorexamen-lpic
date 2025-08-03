@@ -172,11 +172,10 @@ function comprobarRespuesta() {
   const esTexto = p.tipo === "texto";
   const esMultiple = Array.isArray(p.respuestaCorrecta);
 
-  let seleccionadas;
+  let seleccionadas = [];
   let correcta = false;
 
   if (esTexto) {
-    // Manejar respuesta de texto
     const respuestaUsuario = document.getElementById("respuesta-texto").value.trim();
     if (!respuestaUsuario) {
       alert("Por favor escribe una respuesta.");
@@ -184,8 +183,8 @@ function comprobarRespuesta() {
     }
     
     correcta = respuestaUsuario === p.respuestaCorrecta;
+    seleccionadas = [respuestaUsuario];
     
-    // Mostrar feedback visual
     const input = document.getElementById("respuesta-texto");
     input.disabled = true;
     
@@ -196,12 +195,8 @@ function comprobarRespuesta() {
     feedback.style.color = correcta ? "green" : "red";
     
     input.parentNode.appendChild(feedback);
-    
-    // Guardar selección del usuario para el resumen
-    seleccionadas = [respuestaUsuario];
   } 
   else {
-    // Manejar opciones múltiples como antes
     if (esMultiple) {
       seleccionadas = Array.from(document.querySelectorAll('input[name="opcion"]:checked')).map(i => parseInt(i.value));
       if (seleccionadas.length === 0) {
@@ -231,9 +226,6 @@ function comprobarRespuesta() {
       if (esCorrecta) {
         label.style.color = "green";
         label.style.fontWeight = "bold";
-      } else {
-        label.style.color = "black";
-        label.style.fontWeight = "normal";
       }
 
       if (op.checked && !esCorrecta) {
@@ -253,7 +245,8 @@ function comprobarRespuesta() {
     });
 
     correcta = esMultiple
-      ? (seleccionadas.length === p.respuestaCorrecta.length && seleccionadas.every(val => p.respuestaCorrecta.includes(val)))
+      ? (seleccionadas.length === p.respuestaCorrecta.length && 
+         seleccionadas.every(val => p.respuestaCorrecta.includes(val)))
       : (seleccionadas[0] === p.respuestaCorrecta);
   }
 
@@ -265,11 +258,12 @@ function comprobarRespuesta() {
       opciones: p.opciones,
       respuestaCorrecta: p.respuestaCorrecta,
       seleccionUsuario: seleccionadas,
-      tipo: p.tipo // Añadimos el tipo para el resumen
+      tipo: p.tipo
     });
   }
 
   yaComprobada = true;
+  return true;
 }
 
 // Modificar mostrarResultado para manejar preguntas de texto
@@ -346,5 +340,3 @@ window.onload = () => {
   preguntasAleatorias = mezclar([...preguntas]);
   mostrarPregunta();
 };
-
-
