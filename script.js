@@ -13,6 +13,98 @@ const preguntas = [
     pregunta: "Which run levels should never be declared as the default run level when using SysV init? (Choose TWO correct answers.)",
     opciones: ["0", "1", "3", "5", "6"],
     respuestaCorrecta: [0, 4]
+  },
+  {
+    pregunta: "Which of the following statements is correct when talking about /proc/?",
+    opciones: [
+      "All changes to files in /proc/ are stored in /etc/proc.d/ and restored on reboot.",
+      "All files within /proc/ are read-only and their contents cannot be changed.",
+      "All changes to files in /proc/ are immediately recognized by the kernel.",
+      "All files within /proc/ are only readable by the root user."
+    ],
+    respuestaCorrecta: 2
+  },
+  {
+    pregunta: "What of the following statements are true regarding /dev/ when using udev? (Choose TWO correct answers.)",
+    opciones: [
+      "Entries for all possible devices get created on boot even if those devices are not connected.",
+      "Additional rules for udev can be created by adding them to /etc/udev/rules.d/.",
+      "When using udev, it is not possible to create block or character devices in /dev/ using mknod.",
+      "The /dev/ directory is a filesystem of type tmpfs and is mounted by udev during system startup.",
+      "The content of /dev/ is stored in /etc/udev/dev and is restored during system startup."
+    ],
+    respuestaCorrecta: [1, 3]
+  },
+  {
+    pregunta: "Which of the following information is stored within the BIOS? (Choose TWO correct answers.)",
+    opciones: [
+      "Boot device order",
+      "Linux kernel version",
+      "Timezone",
+      "Hardware configuration",
+      "The system's hostname"
+    ],
+    respuestaCorrecta: [0, 3]
+  },
+  {
+    pregunta: "Which of the following commands reboots the system when using SysV init? (Choose TWO correct answers.)",
+    opciones: [
+      "shutdown - r now",
+      "shutdown - 'r' rebooting'",
+      "telinit 6",
+      "telinit 0",
+      "shutdown - k now 'rebooting'"
+    ],
+    respuestaCorrecta: [0, 2]
+  },
+  {
+    pregunta: "Which of the following are init systems used within Linux systems? (Choose THREE correct answers.)",
+    opciones: [
+      "startd",
+      "systemd",
+      "Upstart",
+      "SysInit",
+      "SysV init"
+    ],
+    respuestaCorrecta: [1, 2, 4]
+  },
+  {
+    pregunta: "Which file in the /proc filesystem lists parameters passed from the bootloader to the kernel? (Specify the file name only without any path.)",
+    opciones: ["cmdline"],
+    respuestaCorrecta: 0
+  },
+  {
+    pregunta: "What information can the lspci command display about the system hardware? (Choose THREE correct answers.)",
+    opciones: [
+      "Device IRQ settings",
+      "PCI bus speed",
+      "System battery type",
+      "Device vendor identification",
+      "Ethernet MAC address"
+    ],
+    respuestaCorrecta: [0, 1, 3]
+  },
+  {
+    pregunta: "Which of the following commands brings a system running SysV init into a state in which it is safe to perform maintenance tasks? (Choose TWO correct answers.)",
+    opciones: [
+      "shutdown -R 1 now",
+      "shutdown -single now",
+      "init 1",
+      "telinit 1",
+      "runlevel 1"
+    ],
+    respuestaCorrecta: [2, 3]
+  },
+  {
+    pregunta: "What is the first program that is usually started, at boot time, by the Linux kernel when using SysV init?",
+    opciones: [
+      "/lib/init.so",
+      "/sbin/init",
+      "/etc/rc.d/rcinit",
+      "/proc/sys/kernel/init",
+      "/boot/init"
+    ],
+    respuestaCorrecta: 1
   }
 ];
 
@@ -219,3 +311,4 @@ window.onload = () => {
   preguntasAleatorias = mezclar([...preguntas]);
   mostrarPregunta();
 };
+
