@@ -263,7 +263,22 @@ function comprobarRespuesta() {
   }
 
   yaComprobada = true;
-  return true;
+}
+
+function siguientePregunta() {
+  if (!yaComprobada) {
+    alert("Debes comprobar la respuesta primero.");
+    return;
+  }
+
+  preguntaActual++;
+  yaComprobada = false;
+
+  if (preguntaActual < preguntasAleatorias.length) {
+    mostrarPregunta();
+  } else {
+    mostrarResultado();
+  }
 }
 
 // Modificar mostrarResultado para manejar preguntas de texto
@@ -340,3 +355,4 @@ window.onload = () => {
   preguntasAleatorias = mezclar([...preguntas]);
   mostrarPregunta();
 };
+
