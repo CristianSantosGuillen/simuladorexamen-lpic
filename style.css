@@ -153,3 +153,25 @@ button:hover {
 .opcion-label input {
   margin-right: 8px;
 }
+
+.opcion-texto {
+  margin: 15px 0;
+}
+
+#respuesta-texto {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 300px;
+  font-size: 16px;
+}
+
+.respuesta-correcta {
+  color: green;
+  font-weight: bold;
+}
+
+.respuesta-usuario {
+  color: red;
+}
