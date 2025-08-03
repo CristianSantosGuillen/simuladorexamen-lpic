@@ -70,8 +70,9 @@ const preguntas = [
   },
   {
     pregunta: "Which file in the /proc filesystem lists parameters passed from the bootloader to the kernel? (Specify the file name only without any path.)",
-    opciones: ["cmdline"],
-    respuestaCorrecta: 0
+    tipo: "texto", // Nuevo campo para identificar preguntas de texto
+    respuestaCorrecta: "cmdline", // Respuesta como string para comparación exacta
+    placeholder: "Escribe el nombre del archivo..." // Placeholder para el input
   },
   {
     pregunta: "What information can the lspci command display about the system hardware? (Choose THREE correct answers.)",
@@ -124,9 +125,32 @@ function mostrarPregunta() {
 
   const p = preguntasAleatorias[preguntaActual];
   const esMultiple = Array.isArray(p.respuestaCorrecta);
+  const esTexto = p.tipo === "texto"; // Verificar si es pregunta de texto
 
   const div = document.createElement("div");
   div.className = "question-card";
+
+  let opcionesHTML = "";
+  
+  if (esTexto) {
+    // Renderizar input de texto para preguntas de tipo texto
+    opcionesHTML = `
+      <div class="opcion-texto">
+        <input type="text" id="respuesta-texto" placeholder="${p.placeholder || 'Escribe tu respuesta...'}" />
+      </div>
+    `;
+  } else {
+    // Renderizar opciones múltiples como antes
+    opcionesHTML = p.opciones.map((opcion, i) => {
+      const letra = String.fromCharCode(97 + i);
+      return `
+        <label class="opcion-label">
+          <input type="${esMultiple ? "checkbox" : "radio"}" name="opcion" value="${i}" />
+          <strong>${letra}.</strong> ${opcion}
+        </label>
+      `;
+    }).join("");
+  }
 
   div.innerHTML = `
     <div class="pregunta-header">
@@ -134,15 +158,7 @@ function mostrarPregunta() {
     </div>
     <p class="pregunta-texto"><strong>${p.pregunta}</strong></p>
     <div class="opciones">
-      ${p.opciones.map((opcion, i) => {
-        const letra = String.fromCharCode(97 + i);
-        return `
-          <label class="opcion-label">
-            <input type="${esMultiple ? "checkbox" : "radio"}" name="opcion" value="${i}" />
-            <strong>${letra}.</strong> ${opcion}
-          </label>
-        `;
-      }).join("")}
+      ${opcionesHTML}
     </div>
   `;
 
@@ -153,69 +169,93 @@ function comprobarRespuesta() {
   if (yaComprobada) return;
 
   const p = preguntasAleatorias[preguntaActual];
+  const esTexto = p.tipo === "texto";
   const esMultiple = Array.isArray(p.respuestaCorrecta);
 
   let seleccionadas;
-  if (esMultiple) {
-    seleccionadas = Array.from(document.querySelectorAll('input[name="opcion"]:checked')).map(i => parseInt(i.value));
-    if (seleccionadas.length === 0) {
-      alert("Selecciona al menos una opción antes de comprobar.");
+  let correcta = false;
+
+  if (esTexto) {
+    // Manejar respuesta de texto
+    const respuestaUsuario = document.getElementById("respuesta-texto").value.trim();
+    if (!respuestaUsuario) {
+      alert("Por favor escribe una respuesta.");
       return;
     }
-  } else {
-    const seleccion = document.querySelector('input[name="opcion"]:checked');
-    if (!seleccion) {
-      alert("Selecciona una opción antes de comprobar.");
-      return;
-    }
-    seleccionadas = [parseInt(seleccion.value)];
-  }
-
-  const opciones = document.getElementsByName("opcion");
-
-  opciones.forEach((op, i) => {
-    const label = op.parentElement;
-
-    // Quitar iconos previos si existen
-    const iconoExistente = label.querySelector(".icono-respuesta");
-    if (iconoExistente) {
-      iconoExistente.remove();
-    }
-
-    // Definir si la opción es correcta
-    const esCorrecta = esMultiple
-      ? p.respuestaCorrecta.includes(i)
-      : i === p.respuestaCorrecta;
-
-    // Cambiar estilos de color y peso
-    if (esCorrecta) {
-      label.style.color = "green";
-      label.style.fontWeight = "bold";
+    
+    correcta = respuestaUsuario === p.respuestaCorrecta;
+    
+    // Mostrar feedback visual
+    const input = document.getElementById("respuesta-texto");
+    input.disabled = true;
+    
+    const feedback = document.createElement("span");
+    feedback.style.marginLeft = "10px";
+    feedback.style.fontWeight = "bold";
+    feedback.textContent = correcta ? "✅ Correcto!" : `❌ Incorrecto (Respuesta: "${p.respuestaCorrecta}")`;
+    feedback.style.color = correcta ? "green" : "red";
+    
+    input.parentNode.appendChild(feedback);
+    
+    // Guardar selección del usuario para el resumen
+    seleccionadas = [respuestaUsuario];
+  } 
+  else {
+    // Manejar opciones múltiples como antes
+    if (esMultiple) {
+      seleccionadas = Array.from(document.querySelectorAll('input[name="opcion"]:checked')).map(i => parseInt(i.value));
+      if (seleccionadas.length === 0) {
+        alert("Selecciona al menos una opción antes de comprobar.");
+        return;
+      }
     } else {
-      label.style.color = "black";
-      label.style.fontWeight = "normal";
+      const seleccion = document.querySelector('input[name="opcion"]:checked');
+      if (!seleccion) {
+        alert("Selecciona una opción antes de comprobar.");
+        return;
+      }
+      seleccionadas = [parseInt(seleccion.value)];
     }
 
-    if (op.checked && !esCorrecta) {
-      label.style.color = "red";
-    }
+    const opciones = document.getElementsByName("opcion");
 
-    // Si está seleccionada, añadir icono al lado
-    if (op.checked) {
-      const iconoSpan = document.createElement("span");
-      iconoSpan.className = "icono-respuesta";
-      iconoSpan.style.marginLeft = "8px";
-      iconoSpan.style.fontWeight = "bold";
-      iconoSpan.textContent = esCorrecta ? "✅" : "❌";
-      label.appendChild(iconoSpan);
-    }
+    opciones.forEach((op, i) => {
+      const label = op.parentElement;
+      const iconoExistente = label.querySelector(".icono-respuesta");
+      if (iconoExistente) iconoExistente.remove();
 
-    op.disabled = true;
-  });
+      const esCorrecta = esMultiple
+        ? p.respuestaCorrecta.includes(i)
+        : i === p.respuestaCorrecta;
 
-  const correcta = esMultiple
-    ? (seleccionadas.length === p.respuestaCorrecta.length && seleccionadas.every(val => p.respuestaCorrecta.includes(val)))
-    : (seleccionadas[0] === p.respuestaCorrecta);
+      if (esCorrecta) {
+        label.style.color = "green";
+        label.style.fontWeight = "bold";
+      } else {
+        label.style.color = "black";
+        label.style.fontWeight = "normal";
+      }
+
+      if (op.checked && !esCorrecta) {
+        label.style.color = "red";
+      }
+
+      if (op.checked) {
+        const iconoSpan = document.createElement("span");
+        iconoSpan.className = "icono-respuesta";
+        iconoSpan.style.marginLeft = "8px";
+        iconoSpan.style.fontWeight = "bold";
+        iconoSpan.textContent = esCorrecta ? "✅" : "❌";
+        label.appendChild(iconoSpan);
+      }
+
+      op.disabled = true;
+    });
+
+    correcta = esMultiple
+      ? (seleccionadas.length === p.respuestaCorrecta.length && seleccionadas.every(val => p.respuestaCorrecta.includes(val)))
+      : (seleccionadas[0] === p.respuestaCorrecta);
+  }
 
   if (correcta) {
     respuestasCorrectas++;
@@ -224,29 +264,15 @@ function comprobarRespuesta() {
       pregunta: p.pregunta,
       opciones: p.opciones,
       respuestaCorrecta: p.respuestaCorrecta,
-      seleccionUsuario: seleccionadas
+      seleccionUsuario: seleccionadas,
+      tipo: p.tipo // Añadimos el tipo para el resumen
     });
   }
 
   yaComprobada = true;
 }
 
-function siguientePregunta() {
-  if (!yaComprobada) {
-    alert("Debes comprobar la respuesta primero.");
-    return;
-  }
-
-  preguntaActual++;
-  yaComprobada = false;
-
-  if (preguntaActual < preguntasAleatorias.length) {
-    mostrarPregunta();
-  } else {
-    mostrarResultado();
-  }
-}
-
+// Modificar mostrarResultado para manejar preguntas de texto
 function mostrarResultado() {
   const total = preguntasAleatorias.length;
   const falladas = total - respuestasCorrectas;
@@ -263,20 +289,29 @@ function mostrarResultado() {
     resultadoHTML += `<h3 style="margin-top: 30px;">📋 Resumen de preguntas falladas:</h3>`;
 
     preguntasFalladas.forEach((f) => {
-      const correctas = Array.isArray(f.respuestaCorrecta)
-  ? f.respuestaCorrecta.map(i => `<span class="respuesta-correcta">✅ <strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}</span>`).join("<br>")
-  : `<span class="respuesta-correcta">✅ <strong>${String.fromCharCode(97 + f.respuestaCorrecta)}.</strong> ${f.opciones[f.respuestaCorrecta]}</span>`;
+      let correctas, seleccionadas;
+      
+      if (f.tipo === "texto") {
+        // Formateo para preguntas de texto
+        correctas = `<span class="respuesta-correcta">✅ ${f.respuestaCorrecta}</span>`;
+        seleccionadas = `<span class="respuesta-usuario">❌ ${f.seleccionUsuario[0]}</span>`;
+      } else {
+        // Formateo para preguntas de opción múltiple
+        correctas = Array.isArray(f.respuestaCorrecta)
+          ? f.respuestaCorrecta.map(i => `<span class="respuesta-correcta">✅ <strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}</span>`).join("<br>")
+          : `<span class="respuesta-correcta">✅ <strong>${String.fromCharCode(97 + f.respuestaCorrecta)}.</strong> ${f.opciones[f.respuestaCorrecta]}</span>`;
 
-const seleccionadas = f.seleccionUsuario.map(i => {
-  const esCorrecta = Array.isArray(f.respuestaCorrecta)
-    ? f.respuestaCorrecta.includes(i)
-    : i === f.respuestaCorrecta;
+        seleccionadas = f.seleccionUsuario.map(i => {
+          const esCorrecta = Array.isArray(f.respuestaCorrecta)
+            ? f.respuestaCorrecta.includes(i)
+            : i === f.respuestaCorrecta;
 
-  const icono = esCorrecta ? "✅" : "❌";
-  const clase = esCorrecta ? "respuesta-correcta" : "respuesta-usuario";
+          const icono = esCorrecta ? "✅" : "❌";
+          const clase = esCorrecta ? "respuesta-correcta" : "respuesta-usuario";
 
-  return `<span class="${clase}">${icono} <strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}</span>`;
-}).join("<br>");
+          return `<span class="${clase}">${icono} <strong>${String.fromCharCode(97 + i)}.</strong> ${f.opciones[i]}</span>`;
+        }).join("<br>");
+      }
 
       resultadoHTML += `
         <div class="tarjeta-fallada">
@@ -311,4 +346,5 @@ window.onload = () => {
   preguntasAleatorias = mezclar([...preguntas]);
   mostrarPregunta();
 };
+
 
