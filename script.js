@@ -424,7 +424,7 @@ const preguntas = [
       "rmdir ~/\\dir",
       "rmdir ~/\\dir"
     ],
-    respuestaCorrecta: 3
+    respuestaCorrecta: 4
   },
   // Pregunta 48
   {
@@ -1828,5 +1828,6 @@ window.onload = () => {
   preguntasAleatorias = mezclar([...preguntas]);
   mostrarPregunta();
 };
+
 
 
