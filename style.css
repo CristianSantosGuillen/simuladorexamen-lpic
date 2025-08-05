@@ -1,25 +1,26 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to right, #e0f7fa, #ffffff);
+  background: linear-gradient(to right, #2c3e50, #34495e);
   padding: 40px;
-  color: #2c3e50;
+  color: #ecf0f1;
 }
 
 .container {
-  background: #ffffff;
+  background: #2c3e50;
   padding: 30px;
   border-radius: 16px;
   max-width: 700px;
   margin: auto;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease-in-out;
+  color: #ecf0f1;
 }
 
 h1 {
   text-align: center;
   font-size: 28px;
   margin-bottom: 30px;
-  color: #1a237e;
+  color: #3498db;
 }
 
 .question {
@@ -38,13 +39,14 @@ label {
   margin: 3px 0;
   border: 1px solid #ccc;
   border-radius: 6px;
-  background-color: #f9f9f9;
+  background-color: #34495e;
+  color: #ecf0f1;
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s;
 }
 
 label:hover {
-  background-color: #e0f2f1;
+  background-color: #3d566e;
   border-color: #26a69a;
 }
 
@@ -109,7 +111,7 @@ button:hover {
   border-left: 6px solid #3498db;
   padding: 20px;
   border-radius: 10px;
-  background-color: #fff;
+  background-color: #34495e;
   margin-bottom: 25px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
@@ -141,13 +143,14 @@ button:hover {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 6px;
-  background-color: #f9f9f9;
+  background-color: #3d566e;
+  color: #ecf0f1;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
 .opcion-label:hover {
-  background-color: #f0f8ff;
+  background-color: #4a6b8a;
 }
 
 .opcion-label input {
